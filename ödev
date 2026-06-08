@@ -1,0 +1,22 @@
+# w6_
+import requests
+from bs4 import BeautifulSoup
+
+def veri_topla(urr, f_icerik):
+    urr = 'https://milligazete.com.tr/arsiv/'
+
+    r = requests.get(urr)
+    soup = BeautifulSoup(r.content, 'html.parser')
+
+    haberler = soup.findAll("div", {"class": "col-lg-6"})
+
+    for haber in haberler:
+        kategori = haber.find("span").getText()
+        tarih = haber.find("time").getText()
+
+        sozluk = {'kategori': kategori, 'tarih': tarih}
+
+        with open(f_icerik, 'a', encoding='utf-8') as file:
+            file.write(str(sozluk))
+
+veri_topla("url", "sonuc.txt")
